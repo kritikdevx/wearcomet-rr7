@@ -1,13 +1,13 @@
-import { shopifyClient } from '~/libs/shopify';
-import type { Route } from './+types/home';
-import type { Product } from '@shopify/hydrogen-react/storefront-api-types';
-import { flattenConnection, Image } from '@shopify/hydrogen-react';
-import { Suspense } from 'react';
+import { shopifyClient } from "~/libs/shopify";
+import type { Route } from "./+types/home";
+import type { Product } from "@shopify/hydrogen-react/storefront-api-types";
+import { flattenConnection, Image } from "@shopify/hydrogen-react";
+import { Suspense } from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: 'New React Router App' },
-    { name: 'description', content: 'Welcome to React Router!' },
+    { title: "New React Router App" },
+    { name: "description", content: "Welcome to React Router!" },
   ];
 }
 
@@ -62,7 +62,7 @@ export async function loader({ params }: Route.LoaderArgs) {
     }),
     // Generate the headers using the private token.
     headers: shopifyClient.getPublicTokenHeaders(),
-    method: 'POST',
+    method: "POST",
   });
 
   if (!response.ok) {
@@ -85,9 +85,10 @@ export default function Home({
         {products.map((product) => (
           <div key={product.id}>
             <Image
-              src={product.images.edges[0].node.originalSrc}
+              src={product.images.edges[0].node.url}
               alt={product.images.edges[0].node.altText || product.title}
               loading="eager"
+              className="w-full h-auto"
               sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33.333vw, (min-width: 640px) 50vw, 100vw"
             />
             <p>{product.title}</p>
