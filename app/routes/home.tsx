@@ -18,7 +18,7 @@ export async function loader({ params }: Route.LoaderArgs) {
         /* GraphQL */
         `
           query {
-            products(first: 10) {
+            products(first: 200) {
               edges {
                 node {
                   id
