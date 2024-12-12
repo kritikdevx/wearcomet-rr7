@@ -88,7 +88,6 @@ export default function Home({
               src={product.images.edges[0].node.url}
               alt={product.images.edges[0].node.altText || product.title}
               loading="eager"
-              className="w-full h-auto"
               sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33.333vw, (min-width: 640px) 50vw, 100vw"
             />
             <p>{product.title}</p>
