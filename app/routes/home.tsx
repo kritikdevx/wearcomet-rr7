@@ -34,6 +34,8 @@ export async function loader({ params }: Route.LoaderArgs) {
                     edges {
                       node {
                         originalSrc
+                        url
+                        src
                         altText
                       }
                     }
