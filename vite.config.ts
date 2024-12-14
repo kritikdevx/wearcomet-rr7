@@ -20,5 +20,8 @@ export default defineConfig(({ isSsrBuild, command }) => ({
   ssr: {
     noExternal: command === "build" ? true : undefined,
   },
+  async prerender() {
+    return ["/"];
+  },
   plugins: [reactRouter(), tsconfigPaths()],
 }));
