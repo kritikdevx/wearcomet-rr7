@@ -74,9 +74,7 @@ export async function loader({ params }: Route.LoaderArgs) {
     throw new Error(response.statusText);
   }
 
-  const json = await new Promise((res) => setTimeout(() => {}, 5000)).then(() =>
-    response.json()
-  );
+  const json = await response.json();
 
   const products = flattenConnection(json.data.products) as Product[];
 
