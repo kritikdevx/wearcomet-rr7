@@ -67,7 +67,7 @@ export async function loader({ params }: Route.LoaderArgs) {
     { product },
     {
       headers: {
-        "cache-control": "public, max-age=300, s-maxage=600",
+        "Cache-Control": "public, max-age=300, s-maxage=600",
       },
     }
   );
