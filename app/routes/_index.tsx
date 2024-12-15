@@ -1,9 +1,13 @@
-import { shopifyClient } from "~/libs/shopify";
-import type { Route } from "./+types/home";
-import type { Product } from "@shopify/hydrogen-react/storefront-api-types";
-import { flattenConnection, Image } from "@shopify/hydrogen-react";
+import type { Route } from "./+types/_index";
 
-export function meta({}: Route.MetaArgs) {
+import { Suspense } from "react";
+import { Await, Link } from "react-router";
+import { flattenConnection, Image, Money } from "@shopify/hydrogen-react";
+import type { Product } from "@shopify/hydrogen-react/storefront-api-types";
+
+import { shopifyClient } from "~/libs/shopify";
+
+export function meta({}) {
   return [
     { title: "New React Router App" },
     { name: "description", content: "Welcome to React Router!" },
@@ -70,30 +74,51 @@ export async function loader({ params }: Route.LoaderArgs) {
     throw new Error(response.statusText);
   }
 
-  const json = await response.json();
+  const json = await new Promise((res) => setTimeout(() => {}, 5000)).then(() =>
+    response.json()
+  );
 
   const products = flattenConnection(json.data.products) as Product[];
 
   return { products };
 }
 
-export default function Home({
-  loaderData: { products },
-}: Route.ComponentProps) {
+export default function Page({ loaderData }: Route.ComponentProps) {
+  const { products } = loaderData;
+
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {products.map((product) => (
-        <div key={product.id}>
-          <Image
-            src={product.images.edges[0].node.url}
-            alt={product.images.edges[0].node.altText || product.title}
-            loading="eager"
-            sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33.333vw, (min-width: 640px) 50vw, 100vw"
-          />
-          <p>{product.title}</p>
-          <p>{product.priceRange.minVariantPrice.amount}</p>
+    <Suspense
+      fallback={
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-4">
+          {Array.from({ length: 12 }).map((_, index) => (
+            <div key={index}>
+              <div className="bg-gray-50 h-0 aspect-w-1 aspect-h-1"></div>
+              <div className="h-4 bg-gray-50 mt-2"></div>
+              <div className="h-4 bg-gray-50 mt-2"></div>
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
+      }
+    >
+      <Await resolve={products}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-4">
+          {products.map((product) => (
+            <div key={product.id}>
+              <Link to={`/products/${product.handle}`}>
+                <Image
+                  src={product.images.edges[0].node.url}
+                  alt={product.images.edges[0].node.altText || product.title}
+                  loading="eager"
+                  className="bg-gray-50"
+                  sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33.333vw, (min-width: 640px) 50vw, 100vw"
+                />
+                <p>{product.title}</p>
+                <Money data={product.priceRange.minVariantPrice} />
+              </Link>
+            </div>
+          ))}
+        </div>
+      </Await>
+    </Suspense>
   );
 }
