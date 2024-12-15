@@ -63,18 +63,11 @@ export async function loader({ params }: Route.LoaderArgs) {
   const json = await response.json();
   const product = json.data.product as Product;
 
-  return data(
-    { product },
-    {
-      headers: {
-        "Cache-Control": "public, max-age=300, s-maxage=600",
-      },
-    }
-  );
+  return { product };
 }
 
-export function headers({ actionHeaders, loaderHeaders }: Route.HeadersArgs) {
-  return actionHeaders ? actionHeaders : loaderHeaders;
+export function headers(_: Route.HeadersArgs) {
+  return { "cache-control": "max-age=300, s-maxage=600" };
 }
 
 export default function Page({ loaderData }: Route.ComponentProps) {
