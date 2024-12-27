@@ -1,7 +1,7 @@
 import type { Route } from "./+types/_index";
 
 import React, { Suspense } from "react";
-import { Await, data, Link } from "react-router";
+import { data, Link } from "react-router";
 import { flattenConnection, Image, Money } from "@shopify/hydrogen-react";
 import type { Product } from "@shopify/hydrogen-react/storefront-api-types";
 
@@ -78,18 +78,11 @@ export async function loader({ params }: Route.LoaderArgs) {
     resolve(flattenConnection(json.data.products) as Product[]);
   });
 
-  return data(
-    { products },
-    {
-      headers: {
-        "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=3600", // this will cache reponse on cdn for 1 hour and then revalidate it
-      },
-    }
-  );
+  return { products };
 }
 
-export function headers({ actionHeaders, loaderHeaders }: Route.HeadersArgs) {
-  return actionHeaders ? actionHeaders : loaderHeaders;
+export function headers(_: Route.HeadersArgs) {
+  return { "cache-control": "max-age=300, s-maxage=3600" };
 }
 
 export default function Page({ loaderData }: Route.ComponentProps) {
@@ -112,8 +105,6 @@ export default function Page({ loaderData }: Route.ComponentProps) {
 
 function ProductsGrid({ p }: { p: Promise<Product[]> }) {
   const products = React.use(p);
-
-  const prefetch = products.map((product) => `/products/${product.handle}`);
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-4">
