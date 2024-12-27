@@ -63,7 +63,7 @@ export async function loader({ params }: Route.LoaderArgs) {
 }
 
 export function headers(_: Route.HeadersArgs) {
-  return { "cache-control": "max-age=300, s-maxage=600" };
+  return { "cache-control": "max-age=300, s-maxage=3600" };
 }
 
 export default function Page({ loaderData }: Route.ComponentProps) {

@@ -96,9 +96,13 @@ export default function Page({ loaderData }: Route.ComponentProps) {
     <Suspense
       fallback={
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-4">
-          <div className="bg-gray-50 aspect-w-1 aspect-h-1">loading...</div>
-          <div className="bg-gray-50 aspect-w-1 aspect-h-1">loading...</div>
-          <div className="bg-gray-50 aspect-w-1 aspect-h-1">loading...</div>
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div className="animate-pulse" key={`skeleton-${i}`}>
+              <div className="bg-gray-200 aspect-[273/370.359]" />
+
+              <div className="h-4 bg-gray-200 mt-2" />
+            </div>
+          ))}
         </div>
       }
     >
@@ -130,7 +134,7 @@ function ProductsGrid({ p }: { p: Promise<Product[]> }) {
                 src={product.images.edges[0].node.url}
                 alt={product.images.edges[0].node.altText || product.title}
                 loading="eager"
-                className="bg-gray-50"
+                className="bg-gray-200 aspect-[273/370.359]"
                 sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33.333vw, (min-width: 640px) 50vw, 100vw"
               />
               <p>{product.title}</p>

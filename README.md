@@ -13,6 +13,8 @@ Cache Control headers -
 
 Pre-rendering -
 
+Need to add this to react-router.config.ts file
+
 1. Can pre-render the page at build time
 2. Can pre-render some slug pages at build time and some at runtime
 
