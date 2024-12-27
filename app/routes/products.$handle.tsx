@@ -1,6 +1,5 @@
 import type { Route } from "./+types/products.$handle";
 
-import { data } from "react-router";
 import type { Product } from "@shopify/hydrogen-react/storefront-api-types";
 import { Image, Money } from "@shopify/hydrogen-react";
 
@@ -24,9 +23,7 @@ export async function loader({ params }: Route.LoaderArgs) {
             images(first: 10) {
               edges {
                 node {
-                  originalSrc
                   url
-                  src
                   altText
                 }
               }
@@ -36,7 +33,7 @@ export async function loader({ params }: Route.LoaderArgs) {
                 node {
                   id
                   title
-                  priceV2 {
+                  price {
                     amount
                     currencyCode
                   }
@@ -51,7 +48,6 @@ export async function loader({ params }: Route.LoaderArgs) {
         }
       `,
     }),
-    // Generate the headers using the private token.
     headers: shopifyClient.getPublicTokenHeaders(),
     method: "POST",
   });
@@ -81,8 +77,8 @@ export default function Page({ loaderData }: Route.ComponentProps) {
             key={node.url}
             src={node.url}
             className="aspect-square object-cover bg-gray-50"
-            sizes="(min-width: 768px) 50vw, 100vw"
             loading={index < 3 ? "eager" : "lazy"}
+            sizes="(min-width: 990px) 25vw, (min-width: 768px) 50vw, 100vw"
           />
         ))}
       </div>
