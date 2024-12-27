@@ -1,53 +1,12 @@
-# Welcome to React Router!
+Link Prefetch -
 
-A modern, production-ready template for building full-stack React applications using React Router.
+1. intent - if hover or focus the link
+2. none - if no need to prefetch the link
+3. render - if the as soon as the link is visible on the screen
+4. intent - if the as soon as the link is in the viewport
 
-## Features
+Cache Control headers -
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
-
-## Getting Started
-
-### Installation
-
-Install the dependencies:
-
-```bash
-npm install
-```
-
-### Development
-
-Start the development server with HMR:
-
-```bash
-npm run dev
-```
-
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fjacob-ebey%2Freact-router-templates%2Ftree%2Fmain%2Fvercel&project-name=my-react-router-app&repository-name=my-react-router-app)
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+1. maxage - cache the data on browser for the given time
+2. s-maxage - cache the data on CDN for the given time
+3. stale-while-revalidate - cache the data on browser for the given time and revalidate the data in the background

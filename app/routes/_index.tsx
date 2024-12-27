@@ -1,13 +1,13 @@
 import type { Route } from "./+types/_index";
 
 import React, { Suspense } from "react";
-import { Await, Link } from "react-router";
+import { Await, data, Link } from "react-router";
 import { flattenConnection, Image, Money } from "@shopify/hydrogen-react";
 import type { Product } from "@shopify/hydrogen-react/storefront-api-types";
 
 import { shopifyClient } from "~/libs/shopify";
 
-export function meta({}) {
+export function meta() {
   return [
     { title: "New React Router App" },
     { name: "description", content: "Welcome to React Router!" },
@@ -78,7 +78,18 @@ export async function loader({ params }: Route.LoaderArgs) {
     resolve(flattenConnection(json.data.products) as Product[]);
   });
 
-  return { products };
+  return data(
+    { products },
+    {
+      headers: {
+        "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=3600", // this will cache reponse on cdn for 1 hour and then revalidate it
+      },
+    }
+  );
+}
+
+export function headers({ actionHeaders, loaderHeaders }: Route.HeadersArgs) {
+  return actionHeaders ? actionHeaders : loaderHeaders;
 }
 
 export default function Page({ loaderData }: Route.ComponentProps) {
@@ -102,11 +113,13 @@ export default function Page({ loaderData }: Route.ComponentProps) {
 function ProductsGrid({ p }: { p: Promise<Product[]> }) {
   const products = React.use(p);
 
+  const prefetch = products.map((product) => `/products/${product.handle}`);
+
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-4">
       {products.map((product) => (
         <div key={product.id}>
-          <Link to={`/products/${product.handle}`}>
+          <Link to={`/products/${product.handle}`} prefetch="intent">
             <Image
               src={product.images.edges[0].node.url}
               alt={product.images.edges[0].node.altText || product.title}
