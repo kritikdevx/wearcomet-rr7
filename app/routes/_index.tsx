@@ -1,8 +1,12 @@
 import type { Route } from "./+types/_index";
 
 import React, { Suspense } from "react";
-import { data, Link } from "react-router";
-import { flattenConnection, Image, Money } from "@shopify/hydrogen-react";
+import { Link } from "react-router";
+import {
+  flattenConnection,
+  Image as ShopifyImage,
+  Money,
+} from "@shopify/hydrogen-react";
 import type { Product } from "@shopify/hydrogen-react/storefront-api-types";
 
 import { shopifyClient } from "~/libs/shopify";
@@ -108,21 +112,33 @@ function ProductsGrid({ p }: { p: Promise<Product[]> }) {
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-4">
-      {products.map((product) => (
-        <div key={product.id}>
-          <Link to={`/products/${product.handle}`} prefetch="intent">
-            <Image
-              src={product.images.edges[0].node.url}
-              alt={product.images.edges[0].node.altText || product.title}
-              loading="eager"
-              className="bg-gray-50"
-              sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33.333vw, (min-width: 640px) 50vw, 100vw"
-            />
-            <p>{product.title}</p>
-            <Money data={product.priceRange.minVariantPrice} />
-          </Link>
-        </div>
-      ))}
+      {products.map((product) => {
+        const prefetchImage = () => {
+          const image = new Image();
+          image.src = product.images.edges[0].node.url;
+        };
+
+        return (
+          <div key={product.id}>
+            <Link
+              to={`/products/${product.handle}`}
+              prefetch="intent"
+              onMouseEnter={prefetchImage}
+              onFocus={prefetchImage}
+            >
+              <ShopifyImage
+                src={product.images.edges[0].node.url}
+                alt={product.images.edges[0].node.altText || product.title}
+                loading="eager"
+                className="bg-gray-50"
+                sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33.333vw, (min-width: 640px) 50vw, 100vw"
+              />
+              <p>{product.title}</p>
+              <Money data={product.priceRange.minVariantPrice} />
+            </Link>
+          </div>
+        );
+      })}
     </div>
   );
 }

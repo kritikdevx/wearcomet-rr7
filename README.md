@@ -10,3 +10,20 @@ Cache Control headers -
 1. maxage - cache the data on browser for the given time
 2. s-maxage - cache the data on CDN for the given time
 3. stale-while-revalidate - cache the data on browser for the given time and revalidate the data in the background
+
+Pre-rendering -
+
+1. Can pre-render the page at build time
+2. Can pre-render some slug pages at build time and some at runtime
+
+```
+  prerender: ["/", "/blog", "/blog/popular-post"],
+
+  // async function for dependencies like a CMS
+  async prerender({ getStaticPaths }) {
+    let posts = await fakeGetPostsFromCMS();
+    return ["/", "/blog"].concat(
+      posts.map((post) => post.href)
+    );
+  },
+```
