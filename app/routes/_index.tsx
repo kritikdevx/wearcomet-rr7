@@ -116,7 +116,7 @@ function ProductsGrid({ p }: { p: Promise<Product[]> }) {
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-4">
-      {products.map((product) => {
+      {products.map((product, index) => {
         const prefetchImage = () => {
           const image = new Image();
           image.src = product.images.edges[0].node.url;
@@ -133,7 +133,7 @@ function ProductsGrid({ p }: { p: Promise<Product[]> }) {
               <ShopifyImage
                 src={product.images.edges[0].node.url}
                 alt={product.images.edges[0].node.altText || product.title}
-                loading="eager"
+                loading={index < 4 ? "eager" : "lazy"}
                 className="bg-gray-200 aspect-[273/370.359]"
                 sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33.333vw, (min-width: 640px) 50vw, 100vw"
               />
